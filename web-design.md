@@ -1,0 +1,3 @@
+- wind/atmosphere can be a powerful animation (e.g drifting objects) 
+- greensock is great for sequencing and complex movement (+ cross browser consistency)
+- once you have more than 3 or so sequences/interactions switch up to GreenSock

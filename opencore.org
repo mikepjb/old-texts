@@ -1,0 +1,63 @@
+Guide to investigate/setup a working opencore bootloader:
+
+https://dortania.github.io/OpenCore-Desktop-Guide/ktext.html
+- ACPI has it's own guide, return to main dortania afterward.
+  ... getting a dumped DSDT
+
+* ACPI
+  macOS can be very picky about the devices present in the DSDT, so we need to
+  correct it.
+  - EC :: Embedded controllers. Catalina requires a device named `EC`, so we
+          create a dummy one and hide the actual one usually present in our
+          machine.
+  - AWAC system clock, macOS can't talk to these normally so we force legacy
+    RTC/create a fake one.
+  - NVRAM SSDT.. we need to enable this.
+  - What SSDT do I need? For Ryzen - SSDT-EC-USBX according to table.
+  ** Editing
+  - EC, we have no PNP0C09 (real EC?) so we only need to make a 'dummy' EC for
+    macOS. We still want to find the PCI and LPC pathing so we follow the guide
+    as if we were creating a laptop SSDT-EC.
+
+*** USB Mapping
+    - OpenCore loads kexts before MacOS so you can't override already existing
+      kext values (this is for compatability reasons, we leave MacOS unmodified
+      and make changes at the bootloader level.)
+    - Since the iMacPro1,1 has only an XHC1 controller, our XHC0 + PTXH
+      controllers should be fine. We just need to map them using
+      AppleUSBHostMergeProperties.
+    - port-count is actually the highest port number you have active not the
+      total number of enabled ports.
+
+
+* Unaddressed notes
+  - Motherboard section states that MSI has weird memory layout that requires
+    KASLR fix.. what is this? https://dortania.github.io/Anti-Hackintosh-Buyers-Guide/Motherboard.html
+  - I think we're only using HfsPlus and OpenRuntime drivers, we have lots more
+    in the Drivers folder. (only 2 mentioned in config.plist)
+  - Will consider using VirtualSMC over FakeSMC if sleep still not resolved.
+  - Apparentlly AppleMCEReporter will cause kernel panics on startup for AMD
+    CPUs on MacPro6,1 MacPro7,1 and iMacPro1,1 if a disabler kext is not
+    included. I do not think I have this set despite having iMacPro1,1 on Ryzen
+    5 1600.
+  - Sometimes there is a delay in playing audio for youtube videos causing sync
+    problem.
+
+* SMBIOS
+  My wireless fenvi t919 has the BCM94360CD chipset found on:
+  - iMac 14/15,x
+  - MacPro6,1 (looks pretty similar spec to me)
+
+* Sort of important
+  - AMD OSX Patches do not need to be updated with every minor security update
+  - Very important to CleanNvram on new install, old variables can mess stuff up.
+  - Either VirtualSMC/FakeSMC is required to emulate the SMC chip found on real macs.
+    - Going to trial VirtualSMC as it's by acidanthera who make OpenCore.
+  - DSDT :: Differentiated System Description Table, holds most of the info
+            about your system. Covers USB controllers, CPU threads, embedded
+            controllers etcetcetc.
+  - SSDT :: Secondary System Description Table, a follow up description.
+  - Compile DSDT.aml with MaciASL `File -> SaveAs -> ACPI Machine Language Binary(.AML)`
+  - I *think* that an SSDT is derived from your DSDT dump.  .. the DSDT is used
+    as a reference? in EC tutorial we looks to see if a value (PNP0C09) was
+    present and then picked up a sample SSDT to make bespoke edits.

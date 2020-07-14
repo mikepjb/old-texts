@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# TODO bash-completion inside tmux
+# TODO htop on OSX
+# TODO revive ruby? and clojure? and golang?
+
+echo '. ~/.bashrc' > ~/.bash_profile
+# setup brew; brew install bash
+# add /usr/local/bin/bash to /etc/shells
+chsh -s /usr/local/bin/bash /etc/shells
+
+brew install automake ffmpeg youtube-dl golang node@12 bash-completion@2 wget
+ \ ruby-install chruby fswatch pstree leiningen postgresql gpg # openjdk@11
+
+brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk11
+
+npm -g i tailwindcss-language-server
+
+# htop produces a blank screen even when compiled from repo..
+
+function include {
+  name=$(echo $1 | cut -d/ -f2)
+  location="$HOME/.local/share/nvim/site/pack/rollout/start"
+  echo "$(blue '  ->') looking for $location/$name"
+  if [ ! -d "$location/$name" ]; then
+    git clone --depth 1 "https://github.com/$1.git" "$location/$name"
+  fi
+}
+
+include 'tpope/vim-fireplace'
+include 'tpope/vim-fugitive'
+include 'mikepjb/vim-pair'
+include 'mikepjb/vim-fold'
+include 'pangloss/vim-javascript'
+include 'MaxMEllon/vim-jsx-pretty'
+include 'alvan/vim-closetag'
+include 'mattn/emmet-vim'
+# include 'mikepjb/vim-lsc'
+include 'ajh17/VimCompletesMe'
+include 'ElmCast/elm-vim'
+include 'posva/vim-vue'
+include 'dense-analysis/ale'
+
+# Sleep?
+
+# deleting /Library/Preferences/com.apple.PowerManagement*.plist
+# N.B I have been able to resolve the initial lagginess after resuming sleep
+# when typing in password
+# sudo pmset -a disksleep 0 # disable disk sleep, we have ssds.. this can fuck
+# with hackintosh sleep. (suspect this is what caused irrecoverable sleep state)
+
+# ErP must be on if you want to recover from sleep.
+
+# USB mapping
+# https://dortania.github.io/USB-Map-Guide/amd-mapping/amd.html
+#
+# didn't think there was anything wrong until I compared IORegistry with
+# maciasl (which shows many more ports under PTXH.. the host usb controller)
+
+# keep POT9 + POT10 (top 2 usb ports on ioboard)
+# POT6 and POT7 are the front io usb As
+# I've mapped the USB Ports that show in hackintool under the PTXH XHCI
+# controller.. which makes them work (boot seems faster?) - removing entries
+# definitely disables the ports however this does not seem to have changed my
+# sleep issue.
+
+# Darkwake
+# no flag.. psedo fan spinning sleep
+# darkwake=8.. no change
+# darkwake=2.. no change
+# darkwake=0.. no change.. maybe jumps out of sleep by itself?
+
+# -----------
+
+# Desktop upgrade
+
+# - sleep? software I believe..
+# - 4 pin system fan required
+#   - dimitri uses around 1000 rpm fan speed to balance cooling/noise (got very close to base dba noise 33ish)
+# - possibly resistor for the psu direct fans?
+# - youtube video/audio can lag/go out of sync - does changing alcid fix this?
+# how do we replicate? some videos seem to be okay..
+
+# By default OSX has a resume feature, you can disable this for the terminal:
+defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool false
