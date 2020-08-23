@@ -88,7 +88,7 @@ command! PrettifyXML  :%!xmllint --format -
 command! JackInCljs :CljEval (figwheel.main.api/cljs-repl "dev")<cr>
 nnoremap zS :echo join(reverse(map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')),' ')<cr>
 
-colorscheme default
+colorscheme rollout
 
 augroup clojure
   au Syntax clojure nmap <buffer>  gd <Plug>FireplaceDjump

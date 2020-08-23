@@ -15,6 +15,7 @@ export GEM_HOME=$HOME/.config/gems
 
 alias gr='cd $(git rev-parse --show-toplevel || echo ".")'
 alias ..='cd ..'
+alias i="$HOME/src/texts/install && echo 'Reloading shell..' && source $HOME/.bashrc"
 alias t='tmux attach -t vty || tmux new -s vty'
 alias de='export $(egrep -v "^#" .env | xargs)'
 alias xclip='xclip -sel clip'

@@ -9,6 +9,9 @@ install_config_files() {
   for rc in .*rc .tmux.conf; do
     cp -v $BASE/$rc $HOME/$rc
   done
+
+  mkdir -p $HOME/.vim/colors
+  cp -v $BASE/rollout.vim $HOME/.vim/colors/rollout.vim
 }
 
 configure_git() {
@@ -30,6 +33,10 @@ configure_git() {
   git config --global --replace-all alias.ffa 'fetch --all && git rebase origin/master'
   git config --global --replace-all alias.push-new 'push -u origin HEAD'
   git config --global --replace-all alias.ra "log --abbrev-commit --pretty=format:'%<(7)%C(yellow)%h %Cgreen%<(15)%cr%C(bold cyan)%<(17)<%an>%C(red)%d %Creset %s'"
+}
+
+check_external_commands() {
+  echo 'Checking for external dependencies..'
 }
 
 install_config_files
