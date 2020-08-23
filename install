@@ -64,7 +64,6 @@ check_external_commands() {
   exists ruby
   exists selecta # fuzzy searching utility
   exists ts-node
-  exists typescript
 }
 
 install_config_files
