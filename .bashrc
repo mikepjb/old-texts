@@ -1,13 +1,9 @@
 shopt -s nocaseglob #case insensitive completion
 
-if shopt | grep 'completion_strip_exe' >/dev/null; then
-  shopt -s completion_strip_exe
-fi
-
 [ -f /etc/bash_completion ] && . /etc/bash_completion
 [[ $- =~ i ]] && stty -ixoff -ixon # Disable CTRL-S and CTRL-Q
 
-export EDITOR=nvim
+export EDITOR=vim
 # this causes issues when using clojure, it defaults the .clojure to .config/clojure
 # export XDG_CONFIG_HOME=$HOME/.config # should only be set for linux..
 export PAGER='less -S'
@@ -25,7 +21,7 @@ alias xclip='xclip -sel clip'
 alias jv="jq -C | less -R"
 alias ssha="ssh-agent -a $SSH_AUTH_SOCK && ssh-add ~/.ssh/id_rsa"
 # alias open='xdg-open' # only for linux
-alias vi='nvim'
+alias vi='vim'
 alias get-music='youtube-dl --extract-audio --audio-format m4a'
 alias gifify='ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > out.gif'
 alias rkb='xset r rate 200 25 && setxkbmap -layout us -option ctrl:nocaps'
@@ -50,5 +46,5 @@ jobs_marker() {
 PROMPT_COMMAND='PS1="\W($(git_state)) $(jobs_marker) "'
 
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-source /usr/local/share/chruby/chruby.sh
-chruby 2.7.1
+# source /usr/local/share/chruby/chruby.sh
+# chruby 2.7.1
