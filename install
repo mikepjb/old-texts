@@ -35,9 +35,36 @@ configure_git() {
   git config --global --replace-all alias.ra "log --abbrev-commit --pretty=format:'%<(7)%C(yellow)%h %Cgreen%<(15)%cr%C(bold cyan)%<(17)<%an>%C(red)%d %Creset %s'"
 }
 
+is_0() {
+  if $1; then
+    echo 'true'
+    return
+  fi
+  echo 'false'
+}
+
+exists() {
+  echo -n "Is $1 installed? "
+  [ $(command -v "$1") ] && echo 'true' || echo 'false'
+}
+
 check_external_commands() {
   echo 'Checking for external dependencies..'
+
+  is_vim_8=$(vim --version | grep IMproved | grep -q "\s8" | is_0)
+  echo "Is vim version 8+? $is_vim_8"
+
+  is_tmux_2=$(tmux -V| grep "\s\(2\|3\)" | is_0)
+  echo "Is tmux version 2+? $is_tmux_2"
+
+  exists git
+  exists xmllint
+  exists npm
+  exists node
+  exists ruby
+  exists selecta # fuzzy searching utility
 }
 
 install_config_files
 configure_git
+check_external_commands
