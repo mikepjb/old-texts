@@ -1,1 +1,36 @@
-go get github.com/cortesi/modd/cmd/modd
+#!/bin/bash -e
+
+echo "Copying text files to useful locations from $PWD.."
+
+cd $(dirname $BASH_SOURCE)
+BASE=$(pwd)
+
+install_config_files() {
+  for rc in .*rc .tmux.conf; do
+    cp -v $BASE/$rc $HOME/$rc
+  done
+}
+
+configure_git() {
+  echo 'Configuring git..'
+  git config --global --replace-all core.editor 'vim'
+  git config --global --replace-all core.autocrlf false
+  git config --global --replace-all alias.aa 'add --all'
+  git config --global --replace-all alias.br 'branch --sort=committerdate'
+  git config --global --replace-all alias.st 'status'
+  git config --global --replace-all alias.count 'shortlog -sn'
+  git config --global --replace-all alias.ff 'pull --ff-only'
+  git config --global --replace-all alias.co 'checkout'
+  git config --global --replace-all alias.ci 'commit --verbose'
+  git config --global --replace-all alias.di 'diff'
+  git config --global --replace-all alias.dc 'diff --cached'
+  git config --global --replace-all alias.dd 'diff --stat origin/develop HEAD'
+  git config --global --replace-all alias.list 'config --global --list'
+  git config --global --replace-all alias.amend 'commit --amend'
+  git config --global --replace-all alias.ffa 'fetch --all && git rebase origin/master'
+  git config --global --replace-all alias.push-new 'push -u origin HEAD'
+  git config --global --replace-all alias.ra "log --abbrev-commit --pretty=format:'%<(7)%C(yellow)%h %Cgreen%<(15)%cr%C(bold cyan)%<(17)<%an>%C(red)%d %Creset %s'"
+}
+
+install_config_files
+configure_git
