@@ -48,6 +48,15 @@ exists() {
   [ $(command -v "$1") ] && echo 'true' || echo 'false'
 }
 
+if command -v selecta &> /dev/null; then
+  echo 'selecta is already installed'
+else
+  echo 'selecta could not be found, installing to ~/.local/bin/selecta'
+  mkdir -p ~/.local/bin
+  curl https://raw.githubusercontent.com/garybernhardt/selecta/master/selecta -o ~/.local/bin/selecta
+  chmod +x ~/.local/bin/selecta
+fi
+
 check_external_commands() {
   echo 'Checking for external dependencies..'
 
@@ -64,6 +73,8 @@ check_external_commands() {
   exists ruby
   exists selecta # fuzzy searching utility
   exists ts-node
+  exists wget
+  exists curl
 }
 
 install_config_files

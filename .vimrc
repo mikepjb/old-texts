@@ -48,7 +48,11 @@ nnoremap gb :Gblame<cr>
 nnoremap <C-q> :quit<cr>
 nnoremap <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 nnoremap <leader>h :LSClientShowHover<CR>
-nnoremap <leader>f :find<space>
+if executable('selecta')
+  nnoremap <leader>f :find<space>
+else
+  nnoremap <leader>f :find<space>
+endif
 nnoremap <leader>g :grep<space>
 nnoremap <leader>i :e ~/src/rollout/rollout<cr>
 nnoremap <leader>l :e ~/.log.md<cr>
