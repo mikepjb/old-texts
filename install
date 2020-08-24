@@ -79,6 +79,7 @@ check_external_commands() {
   exists ts-node
   exists wget
   exists curl
+  exists bc # required for backward compatible tmux code
 }
 
 install_config_files
