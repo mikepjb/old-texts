@@ -17,6 +17,11 @@ brew cask install adoptopenjdk11
 
 npm -g i tailwindcss-language-server
 
+go get github.com/cortesi/devd/cmd/devd
+
+brew install coreutils # install GNU versions of tools find/timeout etc
+# timeout is required for crux currently.
+
 # htop produces a blank screen even when compiled from repo..
 
 function include {
@@ -84,3 +89,10 @@ include 'dense-analysis/ale'
 
 # By default OSX has a resume feature, you can disable this for the terminal:
 defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool false
+
+# ---
+# Discord bootloop fix:
+# Discord expects to be able to use Intel's MKL, let's fix that:
+cd /Applications/Discord.app/Contents/MacOS
+echo "MKL_DEBUG_CPU_TYPE=5 ./Discord" > discord_
+vi /Applications/Discord.app/Contents/Info.plist # change CFBundleExecutable property to `discord_`
