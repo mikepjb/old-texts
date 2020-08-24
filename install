@@ -36,7 +36,7 @@ configure_git() {
 }
 
 is_0() {
-  if $1; then
+  if [ "$1" = "0" ]; then
     echo 'true'
     return
   fi
@@ -60,10 +60,10 @@ fi
 check_external_commands() {
   echo 'Checking for external dependencies..'
 
-  is_vim_8=$(vim --version | grep IMproved | grep -q "\s8" | is_0)
+  is_vim_8=$(vim --version | grep IMproved | grep -q "\s8"; is_0 $?)
   echo "Is vim version 8+? $is_vim_8"
 
-  is_tmux_2=$(tmux -V| grep "\s\(2\|3\)" | is_0)
+  is_tmux_2=$(tmux -V| grep -q "\s\(2\|3\)"; is_0 $?)
   echo "Is tmux version 2+? $is_tmux_2"
 
   exists git
