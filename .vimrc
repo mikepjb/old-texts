@@ -17,8 +17,8 @@ Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim' 
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'Quramy/tsuquyomi'
-" Plug 'w0rp/ale' " use over lsc?
-Plug 'natebosch/vim-lsc' " used for clj-kondo and eslint?
+Plug 'dense-analysis/ale'
+" Plug 'natebosch/vim-lsc' " used for clj-kondo and eslint?
 
 call plug#end()
 
@@ -100,6 +100,25 @@ augroup clojure
 augroup end
 
 let g:closetag_filenames = '*.html,*.xhtml,*.md,*.js,*.vue'
+
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_delay = 0
+let g:ale_set_quickfix = 0
+let g:ale_set_loclist = 0
+let g:ale_javascript_eslint_executable = 'eslint --cache'
+let g:ale_linters = {
+  'clojure': ['clj-kondo'],
+  'javascript': [],
+  'typescript': ['tsserver', 'eslint'], 
+  'typescript.tsx': ['tsserver', 'eslint',]
+}
+let g:ale_fixers = {
+  'typescript': ['prettier'],
+  'typescript.tsx': ['prettier']
+}
+" Vim-ale handles TypeScript quickfix, so tell Tsuquyomi not to do it.
+let g:tsuquyomi_disable_quickfix = 1
 
 " Run a given vim command on the results of fuzzy selecting from a given shell
 " command. See usage below.
