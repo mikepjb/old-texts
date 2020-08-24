@@ -26,8 +26,9 @@ syn on
 filetype plugin indent on
 set nocompatible nu autowrite hidden shiftwidth=2 tabstop=2 gdefault mouse=a
 set clipboard=unnamed,unnamedplus expandtab smarttab ignorecase smartcase
-set shortmess+=c iskeyword+=- path+=** wildmenu noswapfile textwidth=79
+set iskeyword+=- path+=** wildmenu noswapfile textwidth=79
 set stl=--\ %1*%F%m%r%h%w%*\ %=\ %y\ -\ [%l,%c]\ [%L,%p%%] showtabline=1
+if v:version >= 800 | set shortmess+=c | endif
 set hlsearch cot+=preview
 set fillchars=stlnc:\-,stl:\-,vert:\|
 setglobal grepformat=%f:%l:%c:%m,%f:%l:%m,%f:%l%m,%f\ \ %l%m
