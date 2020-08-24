@@ -60,6 +60,10 @@ fi
 check_external_commands() {
   echo 'Checking for external dependencies..'
 
+  # N.B in the event that either of these is missing AND your package manager
+  # can't install recent versions of this, they are not too time consuming to
+  # compile from source. Tmux relies on libevent, you'll also probably need
+  # libtool autoconf make and the usual suspects.
   is_vim_8=$(vim --version | grep IMproved | grep -q "\s8"; is_0 $?)
   echo "Is vim version 8+? $is_vim_8"
 
