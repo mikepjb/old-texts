@@ -108,15 +108,15 @@ let g:ale_set_quickfix = 0
 let g:ale_set_loclist = 0
 let g:ale_javascript_eslint_executable = 'eslint --cache'
 let g:ale_linters = {
-  'clojure': ['clj-kondo'],
-  'javascript': [],
-  'typescript': ['tsserver', 'eslint'], 
-  'typescript.tsx': ['tsserver', 'eslint',]
-}
+      \'clojure': ['clj-kondo'],
+      \'javascript': [],
+      \'typescript': ['tsserver', 'eslint'], 
+      \'typescript.tsx': ['tsserver', 'eslint',]
+      \}
 let g:ale_fixers = {
-  'typescript': ['prettier'],
-  'typescript.tsx': ['prettier']
-}
+      \'typescript': ['prettier'],
+      \'typescript.tsx': ['prettier']
+      \}
 " Vim-ale handles TypeScript quickfix, so tell Tsuquyomi not to do it.
 let g:tsuquyomi_disable_quickfix = 1
 
