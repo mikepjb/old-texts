@@ -64,6 +64,10 @@ check_external_commands() {
   # can't install recent versions of this, they are not too time consuming to
   # compile from source. Tmux relies on libevent, you'll also probably need
   # libtool autoconf make and the usual suspects.
+
+  # Vim in particular checks for two X11 headers, Intrinsic.h and X11.h -
+  # Intrinsic isn't always in the same dev package (e.g in rhel, it's in
+  # libXt-devel
   is_vim_8=$(vim --version | grep IMproved | grep -q "\s8"; is_0 $?)
   echo "Is vim version 8+? $is_vim_8"
 
