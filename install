@@ -57,6 +57,11 @@ else
   chmod +x ~/.local/bin/selecta
 fi
 
+compile_vim() {
+  # not complete.. just jotting down the compilation flags for now.
+  ./configure --with-x --with-features=huge --enable-pythoninterp # --enable-gui
+}
+
 check_external_commands() {
   echo 'Checking for external dependencies..'
 
