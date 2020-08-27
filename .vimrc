@@ -15,7 +15,9 @@ Plug 'mikepjb/vim-fold', { 'for': ['css', 'markdown', 'javascript'] }
 Plug 'tpope/vim-fireplace', { 'for': ['clojure'] }
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim' 
-Plug 'maxmellon/vim-jsx-pretty'
+Plug 'peitalin/vim-jsx-typescript'
+" Plug 'herringtondarkholme/yats.vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
 Plug 'Quramy/tsuquyomi'
 Plug 'dense-analysis/ale'
 " Plug 'natebosch/vim-lsc' " used for clj-kondo and eslint?
