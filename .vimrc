@@ -94,6 +94,7 @@ command! PrettifyJSON :%!python -m json.tool
 command! PrettifyXML  :%!xmllint --format -
 command! JackInCljs :CljEval (figwheel.main.api/cljs-repl "dev")<cr>
 command! DR :CljEval (dev/reset)<cr>
+command! RT :RunTests<cr>
 nnoremap zS :echo join(reverse(map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')),' ')<cr>
 
 colorscheme rollout
