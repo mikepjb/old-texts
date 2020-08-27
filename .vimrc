@@ -1,3 +1,6 @@
+" Usage:
+" In Clojure, cpr (require/run tests for current namespace)
+
 func! EnsureManager()
   let plugPath = expand("~/.vim/autoload/plug.vim")
   if !filereadable(plugPath)
@@ -49,10 +52,15 @@ nnoremap Y y$
 nnoremap Q @q
 nnoremap gb :Gblame<cr>
 nnoremap <C-q> :quit<cr>
-nnoremap <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 nnoremap <leader>h :LSClientShowHover<CR>
 if executable('selecta')
-  nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
+  if executable('fd')
+    nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
+    nnoremap <leader>f :call SelectaFile(".", "*", ":edit")<cr>
+  else
+    nnoremap <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
+    nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
+  endif
 else
   nnoremap <leader>f :find<space>
 endif
@@ -61,8 +69,7 @@ nnoremap <leader>i :e ~/src/rollout/rollout<cr>
 nnoremap <leader>l :e ~/.log.md<cr>
 nnoremap <leader>b :b<space>
 
-nnoremap <Tab> :bnext<cr>
-nnoremap <S-Tab> :bprevious<cr>
+nnoremap <Tab> <C-^>
 
 imap <C-c> <esc>
 map <C-h> <C-w><C-h>
@@ -94,13 +101,19 @@ command! PrettifyJSON :%!python -m json.tool
 command! PrettifyXML  :%!xmllint --format -
 command! JackInCljs :CljEval (figwheel.main.api/cljs-repl "dev")<cr>
 command! DR :CljEval (dev/reset)<cr>
-command! RT :RunTests<cr>
 nnoremap zS :echo join(reverse(map(synstack(line('.'), col('.')), 'synIDattr(v:val,"name")')),' ')<cr>
 
 colorscheme rollout
 
 augroup clojure
-  au Syntax clojure nmap <buffer>  gd <Plug>FireplaceDjump
+  au Syntax clojure nmap <buffer> gd <Plug>FireplaceDjump
+augroup end
+
+augroup typescript
+  au Syntax typescript nmap <buffer> gd :TsuDefinition<cr>
+  au Syntax typescript.tsx nmap <buffer> gd :TsuDefinition<cr>
+  au Syntax typescript nmap <buffer> gD :TsuTypeDefinition<cr>
+  au Syntax typescript.tsx nmap <buffer> gD :TsuTypeDefinition<cr>
 augroup end
 
 let g:closetag_filenames = '*.html,*.xhtml,*.md,*.js,*.vue'
@@ -137,4 +150,8 @@ function! SelectaCommand(choice_command, selecta_args, vim_command)
   endtry
   redraw!
   exec a:vim_command . " " . selection
+endfunction
+
+function! SelectaFile(path, glob, command)
+  call SelectaCommand("fd -t f . " . a:path, "", a:command)
 endfunction
