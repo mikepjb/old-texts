@@ -82,9 +82,9 @@ nnoremap g1 :ALEFirst<cr>
 nnoremap g0 :ALEStopAllLSPs<cr>
 nnoremap gq :copen<cr>
 
-nnoremap <silent><expr> <C-G> (v:count ? ':<C-U>:call <SID>save_change_marks()\|edit\|call <SID>restore_change_marks()<CR>' : '')
+nnoremap <silent><expr> <C-g> (v:count ? ':<C-u>:call <SID>save_change_marks()\|edit\|call <SID>restore_change_marks()<CR>' : '')
       \ . ':nohlsearch'.(has('diff')?'\|diffupdate':'')
-      \ . '<CR><C-L>'
+      \ . '<cr><C-l><C-g>'
 
 command! TrimWhitespace :%s/\s\+$//e
 command! ClearPrefixWhitespace :%s/^\s\+//g
