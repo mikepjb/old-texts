@@ -89,6 +89,8 @@ check_external_commands() {
   exists wget
   exists curl
   exists bc # required for backward compatible tmux code
+  exists fd # better version of find
+  exists rg # ripgrep is a better version of grep
 }
 
 install_config_files
