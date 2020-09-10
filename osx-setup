@@ -4,6 +4,11 @@
 # TODO htop on OSX
 # TODO revive ruby? and clojure? and golang?
 
+# When you have xcode installed but haven't accepted the license it will stall
+# for ages when starting a terminal (e.g if git is invoked during startup to
+# create your prompt line!)
+sudo xcodebuild -license accept
+
 echo '. ~/.bashrc' > ~/.bash_profile
 # setup brew; brew install bash
 # add /usr/local/bin/bash to /etc/shells
