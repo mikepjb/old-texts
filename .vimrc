@@ -55,15 +55,15 @@ nnoremap <C-q> :quit<cr>
 nnoremap <leader>h :LSClientShowHover<CR>
 if executable('selecta')
   if executable('fd')
-    nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
+    " nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
     nnoremap <leader>f :call SelectaFile(".", "*", ":edit")<cr>
   else
-    nnoremap <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
     nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
   endif
 else
   nnoremap <leader>f :find<space>
 endif
+nnoremap <Leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 nnoremap <leader>g :grep<space>
 nnoremap <leader>i :e ~/src/rollout/rollout<cr>
 nnoremap <leader>l :e ~/.log.md<cr>
