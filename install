@@ -62,6 +62,45 @@ compile_vim() {
   ./configure --with-x --with-features=huge --enable-pythoninterp # --enable-gui
 }
 
+set_colours() {
+  echo 'set_colours not implemented yet, skipping..'
+  # ! special
+  # *.foreground:   #f7fafc
+  # *.background:   #1a202c
+  # *.cursorColor:  #f7fafc
+
+  # ! black
+  # *.color0:       #2d3748
+  # *.color8:       #718096
+
+  # ! red
+  # *.color1:       #f56565
+  # *.color9:       #feb2b2
+
+  # ! green
+  # *.color2:       #c6f6d5
+  # *.color10:      #f0fff4
+
+  # ! yellow
+  # *.color3:       #faf089
+  # *.color11:      #fefcbf
+
+  # ! blue
+  # *.color4:       #bee3f8
+  # *.color12:      #ebfff8
+
+  # ! magenta
+  # *.color5:       #ed64a6
+  # *.color13:      #fbb6ce
+
+  # ! cyan
+  # *.color6:       #4fd1c5
+  # *.color14:      #b2f5ea
+
+  # ! white
+  # *.color7:       #f7fafc
+  # *.color15:      #ffffff
+}
 check_external_commands() {
   echo 'Checking for external dependencies..'
 
@@ -95,4 +134,5 @@ check_external_commands() {
 
 install_config_files
 configure_git
+set_colours
 check_external_commands
