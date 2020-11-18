@@ -28,9 +28,9 @@ alias gifify='ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle -
 alias rkb='xset r rate 200 25 && setxkbmap -layout us -option ctrl:nocaps'
 alias pg='pg_ctl -D /usr/local/var/postgres' # start/stop
 
-gx() { grep -r --color=always --exclude-dir={web-target,.clj-kondo,node_modules,out,target} $*; }
-alias gxl='gx -l "$*"'
-alias rel='!! | less -R'
+gxi() { grep -r --color=always --exclude-dir={web-target,.clj-kondo,node_modules,out,target} $*; }
+gx() { gxi "$*" | less -R }
+alias gxl='gx -l'
 
 viw() { vi `which "$1"`; }
 pp() { until ping -c1 1.1.1.1 >/dev/null 2>&1; do :; done; }
