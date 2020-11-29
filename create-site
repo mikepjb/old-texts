@@ -1,69 +1,180 @@
-#!/bin/bash
+#!/usr/bin/env node
 
-# TODO do it based on first arg cd/mkdir
+const fs = require('fs')
+const execSync = require('child_process').execSync
 
-project_name="$1"
+const args = process.argv.slice(2)
+const projectName = args[0]
+const projectDir = './' + projectName
+const defaultDeps = ['react', 'react-dom']
+const defaultDevDeps = [
+  '@types/react',
+  '@types/react-dom',
+  'typescript',
+  'ts-node',
+  'ts-loader',
+  'css-loader',
+  'style-loader',
+  'webpack',
+  'webpack-cli',
+  'webpack-dev-server',
+  'eslint',
+  'mocha'
+]
+const clientSrcDir = 'src'
+const buildDir = 'dist'
+const assetsDir = 'static'
+const defaultScripts = {
+  'clean': "rm -rf ${buildDir}",
+  'build': 'webpack --mode production --progress',
+  'dev': 'webpack serve --host 0.0.0.0',
+  'lint': 'eslint . --ext .ts',
+  'test': 'mocha'
+}
 
-mkdir -p $project_name
-cd $project_name
+const exec = (cmd) => {
+  console.log(execSync(cmd).toString().trim())
+}
 
-git init
-npm init -y
-npm i webpack webpack-cli \
-  webpack-dev-server eslint --save-dev
+const includeScripts = (scripts) => {
+  var config = JSON.parse(fs.readFileSync('package.json').toString())
+  for (const k in scripts) {
+    config.scripts[k] = scripts[k]
+  }
+  fs.writeFileSync('package.json', JSON.stringify(config, null, 2))
+}
 
-webpack_config=$(cat <<EOF
+
+if (args.length != 1) {
+  console.log('no argument given as an argument, exiting..')
+  process.exit(1)
+}
+
+console.log('starting new site.. ' + projectName)
+
+console.log('creating new directory: ' + projectDir)
+fs.mkdirSync(projectDir, '0777', true)
+process.chdir(projectDir)
+
+exec('git init')
+exec('npm init -y')
+exec('npm i ' + defaultDeps.join(' ') + ' --prefer-offline')
+exec('npm i ' + defaultDevDeps.join(' ') + ' --save-dev --prefer-offline')
+includeScripts(defaultScripts)
+
+const webpackConfig = `
 const path = require('path');
-const PATHS = {
-    app: path.resolve(__dirname,'app'),
-    build: path.resolve(__dirname,'build')
+const config = {
+    srcDir: path.resolve(__dirname,'${clientSrcDir}'),
+    buildDir: path.resolve(__dirname,'${buildDir}'),
+    assetsDir: path.resolve(__dirname,'${assetsDir}')
 };
 module.exports = {
     entry: {
-        app: PATHS.app + "/index.js"
+        app: config.srcDir + "/index.tsx"
+    },
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          use: 'ts-loader',
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        }
+      ]
+    },
+    resolve: {
+      extensions: ['.tsx', '.ts', '.js', '.css'],
+    },
+    devServer: {
+      contentBase: config.assetsDir
     },
     output: {
-        path: PATHS.build,
-        filename: 'bundle.js'
+      path: config.buildDir,
+      filename: 'bundle.js',
+      publicPath: '/'
     }
 };
-EOF
-)
+`.trim()
+fs.writeFileSync('webpack.config.js', webpackConfig)
 
-cat $webpack_config >> webpack.config.js
+const eslintConfig = `
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/eslint-recommended"
+  ]
+}`.trim()
+fs.writeFileSync('.eslintrc', eslintConfig)
 
-# TODO main thing here is to insert clean/build/dev/lint tasks in the scripts
-# section.
-package_config=$(cat <<EOF
-nothing
-EOF
-)
+const eslintIgnore = `
+node_modules
+${buildDir}
+`.trim()
+fs.writeFileSync('.eslintignore', eslintIgnore)
 
-cat $package_config >> package.json
+let index = `
+import React from 'react'
+import ReactDOM from 'react-dom'
+import './style'
 
-index=$(cat <<EOF
-var element = document.createElement('h1');
-element.innerHTML = 'Hello World!'
-document.body.appendChild(element);
-EOF
-)
+const App = () => {
+  return (
+    <div>What is this?</div>
+  )
+}
 
-mkdir -p ./app
-cat $index >> ./app/index.js
+ReactDOM.render(<App />, document.getElementById('app'));
+`.trim()
+fs.mkdirSync('src', '0777', true)
+fs.writeFileSync('./src/index.tsx', index)
 
-index_html=$(cat <<EOF
+let style = `
+html, body { margin: 0; padding: 0; }
+`.trim()
+fs.writeFileSync('./src/style.css', style)
+
+const indexPage = `
 <!DOCTYPE html>
 <html lang="en">
- <head> <meta charset="utf-8">
-    <title>MyApp</title>
-  </head>
-  <body>
-      <div id="app"></div>
-      <script src="./bundle.js"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">loading..</div>
+    <script type="text/javascript" src="bundle.js"></script>
+</body>
 </html>
-EOF
-)
+`.trim()
+fs.mkdirSync('static', '0777', true)
+fs.writeFileSync('./static/index.html', indexPage)
 
-mkdir -p ./build
-cat $index_html >> ./build/index.html
+const tsconfig = `
+{
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*", "public/*"],
+
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es5",
+    "strict": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "outDir": "target/client",
+    "sourceMap": true
+  }
+}
+`.trim()
+fs.writeFileSync('./tsconfig.json', tsconfig)
+

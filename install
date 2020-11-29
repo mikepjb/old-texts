@@ -136,3 +136,4 @@ install_config_files
 configure_git
 set_colours
 check_external_commands
+mkdir -p ~/.local/bin && cp ./create-site ~/.local/bin
