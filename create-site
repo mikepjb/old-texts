@@ -9,7 +9,8 @@ cd $project_name
 
 git init
 npm init -y
-npm i webpack webpack-cli eslint --save-dev
+npm i webpack webpack-cli \
+  webpack-dev-server eslint --save-dev
 
 webpack_config=$(cat <<EOF
 const path = require('path');
@@ -31,21 +32,10 @@ EOF
 
 cat $webpack_config >> webpack.config.js
 
+# TODO main thing here is to insert clean/build/dev/lint tasks in the scripts
+# section.
 package_config=$(cat <<EOF
-const path = require('path');
-const PATHS = {
-    app: path.resolve(__dirname,'app'),
-    build: path.resolve(__dirname,'build')
-};
-module.exports = {
-    entry: {
-        app: PATHS.app + "/index.js"
-    },
-    output: {
-        path: PATHS.build,
-        filename: 'bundle.js'
-    }
-};
+nothing
 EOF
 )
 
