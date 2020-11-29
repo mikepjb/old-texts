@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# TODO do it based on first arg cd/mkdir
+
+project_name="$1"
+
+mkdir -p $project_name
+cd $project_name
+
+git init
+npm init -y
+npm i webpack webpack-cli eslint --save-dev
+
+webpack_config=$(cat <<EOF
+const path = require('path');
+const PATHS = {
+    app: path.resolve(__dirname,'app'),
+    build: path.resolve(__dirname,'build')
+};
+module.exports = {
+    entry: {
+        app: PATHS.app + "/index.js"
+    },
+    output: {
+        path: PATHS.build,
+        filename: 'bundle.js'
+    }
+};
+EOF
+)
+
+cat $webpack_config >> webpack.config.js
+
+package_config=$(cat <<EOF
+const path = require('path');
+const PATHS = {
+    app: path.resolve(__dirname,'app'),
+    build: path.resolve(__dirname,'build')
+};
+module.exports = {
+    entry: {
+        app: PATHS.app + "/index.js"
+    },
+    output: {
+        path: PATHS.build,
+        filename: 'bundle.js'
+    }
+};
+EOF
+)
+
+cat $package_config >> package.json
+
+index=$(cat <<EOF
+var element = document.createElement('h1');
+element.innerHTML = 'Hello World!'
+document.body.appendChild(element);
+EOF
+)
+
+mkdir -p ./app
+cat $index >> ./app/index.js
+
+index_html=$(cat <<EOF
+<!DOCTYPE html>
+<html lang="en">
+ <head> <meta charset="utf-8">
+    <title>MyApp</title>
+  </head>
+  <body>
+      <div id="app"></div>
+      <script src="./bundle.js"></script>
+  </body>
+</html>
+EOF
+)
+
+mkdir -p ./build
+cat $index_html >> ./build/index.html
