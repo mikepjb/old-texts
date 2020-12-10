@@ -31,7 +31,7 @@ alias rkb='xset r rate 200 25 && setxkbmap -layout us -option ctrl:nocaps'
 alias pg='pg_ctl -D /usr/local/var/postgres' # start/stop
 
 gxi() { grep -r --color=always --exclude-dir={web-target,.clj-kondo,node_modules,out,target} "$@"; }
-gx() { gxi "$@" | less -R }
+gx() { gxi "$@" | less -R; }
 alias gxl='gx -l'
 
 viw() { vi `which "$1"`; }
