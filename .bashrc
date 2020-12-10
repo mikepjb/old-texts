@@ -4,6 +4,8 @@ shopt -s nocaseglob #case insensitive completion
 [[ $- =~ i ]] && stty -ixoff -ixon # Disable CTRL-S and CTRL-Q
 
 export EDITOR=vim
+export HISTCONTROL=erasedups
+export HISTSIZE=10000
 # this causes issues when using clojure, it defaults the .clojure to .config/clojure
 # export XDG_CONFIG_HOME=$HOME/.config # should only be set for linux..
 export PAGER='less -S'
@@ -28,8 +30,8 @@ alias gifify='ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle -
 alias rkb='xset r rate 200 25 && setxkbmap -layout us -option ctrl:nocaps'
 alias pg='pg_ctl -D /usr/local/var/postgres' # start/stop
 
-gxi() { grep -r --color=always --exclude-dir={web-target,.clj-kondo,node_modules,out,target} $*; }
-gx() { gxi "$*" | less -R }
+gxi() { grep -r --color=always --exclude-dir={web-target,.clj-kondo,node_modules,out,target} "$@"; }
+gx() { gxi "$@" | less -R }
 alias gxl='gx -l'
 
 viw() { vi `which "$1"`; }

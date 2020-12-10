@@ -28,6 +28,7 @@ configure_git() {
   git config --global --replace-all alias.di 'diff'
   git config --global --replace-all alias.dc 'diff --cached'
   git config --global --replace-all alias.dd 'diff --stat origin/develop HEAD'
+  git config --global --replace-all alias.dn 'diff --name-status'
   git config --global --replace-all alias.list 'config --global --list'
   git config --global --replace-all alias.amend 'commit --amend'
   git config --global --replace-all alias.ffa 'fetch --all && git rebase origin/master'
