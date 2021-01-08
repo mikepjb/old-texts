@@ -6,6 +6,7 @@ cd $(dirname $BASH_SOURCE)
 BASE=$(pwd)
 
 install_config_files() {
+  echo '. ~/.bashrc' > ~/.bash_profile
   for rc in .*rc .tmux.conf; do
     cp -v $BASE/$rc $HOME/$rc
   done
