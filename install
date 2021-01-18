@@ -134,6 +134,20 @@ check_external_commands() {
   exists rg # ripgrep is a better version of grep
 }
 
+macos_setup() {
+  if [ `uname -s` = "Darwin" ]; then
+    echo 'this is macos'
+  fi
+
+  if [ -f "/Library/Developer/CommandLineTools/usr/bin/xcrun" ]; then
+    echo 'xcrun found'
+  else
+    echo 'xcrun missing, we should install xcode-tools'
+    xcode-select --install
+  fi
+}
+
+macos_setup
 install_config_files
 configure_git
 set_colours
