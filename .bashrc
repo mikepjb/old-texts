@@ -1,8 +1,28 @@
 shopt -s nocaseglob #case insensitive completion
 
+OS=$(uname -s)
 [ -f /etc/bash_completion ] && . /etc/bash_completion
 [[ $- =~ i ]] && stty -ixoff -ixon # Disable CTRL-S and CTRL-Q
 
+join_by() { local IFS="$1"; shift; echo "$*"; }
+
+path_dirs=(
+  /opt/homebrew/bin
+  /usr/local/bin
+  /usr/local/sbin
+  /bin
+  /sbin
+  /usr/local/opt/node@12/bin
+  /opt/homebrew/opt/node@12/bin
+  $HOME/.config/npm/bin
+  /opt/homebrew/bin
+  $HOME/.local/bin
+  /usr/bin
+  /usr/sbin
+  $HOME/go/bin
+)
+
+export PATH=$(join_by : "${path_dirs[@]}")
 export EDITOR=vim
 export HISTCONTROL=erasedups
 export HISTSIZE=10000
@@ -10,7 +30,6 @@ export HISTSIZE=10000
 # export XDG_CONFIG_HOME=$HOME/.config # should only be set for linux..
 export PAGER='less -S'
 export SSH_AUTH_SOCK=$HOME/.ssh/ssh-agent.socket
-export PATH="/usr/local/bin:/usr/local/sbin:/bin:/sbin:/usr/local/opt/node@12/bin:$HOME/.config/npm/bin:/opt/homebrew/bin:$HOME/.local/bin:/usr/bin:/usr/sbin:$HOME/go/bin"
 export CDPATH=$HOME/src
 export NPM_CONFIG_PREFIX=$HOME/.config/npm
 export GEM_HOME=$HOME/.config/gems
@@ -56,3 +75,9 @@ PROMPT_COMMAND='PS1="\W($(git_state)) $(jobs_marker) "'
 # [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 # source /usr/local/share/chruby/chruby.sh
 # chruby 2.7.1
+
+if [ "$OS" = "Darwin" ]; then
+  if [ -f $(brew --prefix)/etc/bash_completion ]; then
+    . $(brew --prefix)/etc/bash_completion
+  fi
+fi

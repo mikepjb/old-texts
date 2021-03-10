@@ -13,6 +13,10 @@ install_config_files() {
 
   mkdir -p $HOME/.vim/colors
   cp -v $BASE/rollout.vim $HOME/.vim/colors/rollout.vim
+
+  mkdir -p $HOME/.emacs.d/
+  cp -v $BASE/init.el $HOME/.emacs.d/
+  cp -v $BASE/rollout-theme.el $HOME/.emacs.d/
 }
 
 configure_git() {
@@ -134,17 +138,36 @@ check_external_commands() {
   exists rg # ripgrep is a better version of grep
 }
 
+install_with_brew_if_missing() {
+  package_name="$1"
+  cli_to_check="$2"
+
+  if [ ! $(command -v "$cli_to_check") ]; then
+    brew install "$package_name"
+  fi
+}
+
 macos_setup() {
   if [ `uname -s` = "Darwin" ]; then
     echo 'this is macos'
   fi
 
-  if [ -f "/Library/Developer/CommandLineTools/usr/bin/xcrun" ]; then
+  if [ -f "/usr/bin/xcrun" ]; then
     echo 'xcrun found'
   else
     echo 'xcrun missing, we should install xcode-tools'
     xcode-select --install
   fi
+
+  # disable mouse acceleration
+  # defaults write -g com.apple.mouse.scaling -1
+
+  install_with_brew_if_missing ffmpeg ffmpeg
+  install_with_brew_if_missing rg rg
+  install_with_brew_if_missing fd fd
+  install_with_brew_if_missing wget wget
+  install_with_brew_if_missing clojure clojure
+  # install_with_brew_if_missing bash_completion bash-completion
 }
 
 macos_setup
