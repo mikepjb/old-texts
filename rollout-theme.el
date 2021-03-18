@@ -44,6 +44,8 @@
 
    `(clojure-keyword-face ((t (:foreground ,red))))
 
+   `(markdown-inline-code-face ((t (:foreground ,red))))
+
    `(ido-first-match ((t (:foreground ,cyan))))
    `(ido-only-match ((t (:foreground ,green))))
    `(ido-subdir ((t (:foreground ,yellow))))
