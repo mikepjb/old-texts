@@ -128,3 +128,9 @@
   (setq paren-face-regexp "[]{}[()]{()}"))
 
 (load-theme 'rollout t)
+
+(grep-compute-defaults)
+(grep-apply-setting 'grep-find-template
+  (concat grep-find-template " | cut -c 1-200"))
+
+;; (set-frame-font "Inconsolata 14" nil t)
