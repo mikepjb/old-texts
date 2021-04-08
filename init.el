@@ -5,7 +5,7 @@
 
 (defun update ()
   (interactive)
-  (message "Copying texts init.el -> ~")
+  (message "Copying texts init.el & rollout-theme.el -> ~/.emacs.d")
   (let ((theme-file (concat user-emacs-directory "rollout-theme.el")))
     (unless (file-directory-p user-emacs-directory)
       (make-directory user-emacs-directory))
@@ -76,9 +76,10 @@
        ("C-c P" . projectile-grep)
        ("C-h" . delete-backward-char)
        ("M-H" . ,help-map)
-       ;; ("C-;" . company-capf)
-       ;; ("M-k" . paredit-forward-barf-sexp)
-       ;; ("M-l" . paredit-forward-slurp-sexp)
+       ("M-j" . join-line)
+       ("C-;" . company-capf)
+       ("M-k" . paredit-forward-barf-sexp)
+       ("M-l" . paredit-forward-slurp-sexp)
        ("M-RET" . toggle-frame-fullscreen)))
   (global-set-key (kbd (car binding)) (cdr binding)))
 
@@ -123,8 +124,24 @@
 
 (include projectile)
 
+(include paredit)
+
+(when (include js2-mode)
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+
+(when (include flycheck)
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+
+  (setq-default flycheck-disabled-checkers
+                (append flycheck-disabled-checkers
+                        '(javascript-jshint)))
+
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (setq-default flycheck-temp-prefix ".flycheck"))
+
 (when (include web-mode)
-  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
+  (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode)))
 
 (when (include clojure-mode)
   (include cider))
@@ -141,4 +158,5 @@
 
 (setq exec-path (append exec-path '("/opt/homebrew/bin/")))
 
-;; (set-frame-font "Inconsolata 14" nil t)
+(if (eq system-type 'gnu/linux)
+    (set-frame-font "Inconsolata 14" nil))
