@@ -42,7 +42,7 @@
  compilation-ask-about-save nil
  ido-file-extensions-order '(".org" ".clj" ".cljs" ".cljc" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf")
  backup-directory-alist `(("." . ,(concat user-emacs-directory "saves")))
- custom-file (make-temp-file ""))
+ custom-file (concat user-emacs-directory "custom.el"))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -70,6 +70,7 @@
      `(("M-o" . other-window)
        ("C-c i" . ,(ifn (find-file "~/src/texts/init.el")))
        ("C-c n" . ,(ifn (find-file (concat user-emacs-directory "notes.org"))))
+       ("C-c l" . ,(ifn (find-file "~/src")))
        ("C-c g" . magit)
        ("C-c p" . projectile-find-file)
        ("C-c P" . projectile-grep)
@@ -120,6 +121,8 @@
 (include markdown-mode)
 (include magit)
 
+(include projectile)
+
 (when (include web-mode)
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 
@@ -132,5 +135,7 @@
 (grep-compute-defaults)
 (grep-apply-setting 'grep-find-template
   (concat grep-find-template " | cut -c 1-200"))
+
+(setq exec-path (append exec-path '("/opt/homebrew/bin/")))
 
 ;; (set-frame-font "Inconsolata 14" nil t)
