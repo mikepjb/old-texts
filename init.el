@@ -1,4 +1,14 @@
-;; init.el -*- lexical-binding: t -*-
+;;; emacs-config --- Editor Setup -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This file bootstraps the configuration of Emacs.
+
+;; Additionally here is a quick reference of common things you may want to do:
+
+;; - Running tasks (e.g 'npm test') use M-S-& to run an async-command
+
+;;; Code:
 
 (setq gc-cons-threshold 32000000
       garbage-collection-messages t)
@@ -50,8 +60,8 @@
   (setq-local tab-width n)
   (setq-local c-basic-offset n)
   (setq-local javascript-indent-level n)
-  (setq-local js-indent-level n)
-  (setq-local js2-basic-offset n)
+  ;; (setq-local js-indent-level n)
+  ;; (setq-local js2-basic-offset n)
   (setq-local css-indent-offset n))
 
 (defmacro ifn (fn)
@@ -127,7 +137,10 @@
 (include paredit)
 
 (when (include js2-mode)
-  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode)))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (include nodejs-repl))
+
+(include json-mode)
 
 (when (include flycheck)
   (add-hook 'after-init-hook #'global-flycheck-mode)
