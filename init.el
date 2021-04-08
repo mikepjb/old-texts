@@ -126,6 +126,9 @@
 (when (include web-mode)
   (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode)))
 
+(when (include clojure-mode)
+  (include cider))
+
 (when (include paren-face)
   (global-paren-face-mode t)
   (setq paren-face-regexp "[]{}[()]{()}"))
