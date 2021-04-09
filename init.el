@@ -64,8 +64,30 @@
   ;; (setq-local js2-basic-offset n)
   (setq-local css-indent-offset n))
 
+(with-eval-after-load 'compile
+  (require 'ansi-color)
+  (defun mikepjb/colourise-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'mikepjb/colourise-compilation-buffer))
+
 (defmacro ifn (fn)
   `(lambda () (interactive) ,fn))
+
+(defun git-root ()
+  "Return current project root or pwd if VCS not found."
+  (shell-command-to-string "echo -ne $(git rev-parse --show-toplevel || echo \".\")"))
+
+(defun compile-in-project ()
+  (interactive)
+  (let ((default-directory (git-root)))
+    (call-interactively #'compile)))
+
+(defun run-tests-for-current-file ()
+  (interactive)
+  (let ((default-directory (git-root)))
+    ;; assume mocha/js for now, should expand this later on.
+    (compile (concat "./node_modules/mocha/bin/mocha " buffer-file-name))))
 
 (defmacro include (name &rest args)
   `(progn
