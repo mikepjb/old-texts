@@ -64,6 +64,7 @@
   ;; (setq-local js2-basic-offset n)
   (setq-local css-indent-offset n))
 
+;; TODO Doesn't work the first time compile is used.
 (with-eval-after-load 'compile
   (require 'ansi-color)
   (defun mikepjb/colourise-compilation-buffer ()
@@ -103,6 +104,7 @@
        ("C-c i" . ,(ifn (find-file "~/src/texts/init.el")))
        ("C-c n" . ,(ifn (find-file (concat user-emacs-directory "notes.org"))))
        ("C-c l" . ,(ifn (find-file "~/src")))
+       ("C-c C-c" . compile-in-project)
        ("C-c g" . magit)
        ("C-c p" . projectile-find-file)
        ("C-c P" . projectile-grep)
