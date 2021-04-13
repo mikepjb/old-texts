@@ -7,6 +7,11 @@
 ;; Additionally here is a quick reference of common things you may want to do:
 
 ;; - Running tasks (e.g 'npm test') use M-S-& to run an async-command
+;; - Magit:
+;;   - ll : opens log view
+;;   - bb : checksout current sha in log view
+;;   - Fu : pull
+;;   - Pu : push
 
 ;;; Code:
 
