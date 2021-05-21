@@ -4,6 +4,10 @@ set -e
 
 NAME="example"
 
+if [ ! -z $1 ]; then
+  NAME="$1"
+fi
+
 DEPSEDN=$(cat <<EOF
 {:deps {org.clojure/clojure {:mvn/version "1.10.3"}
         ring/ring-core {:mvn/version "1.8.2"}
@@ -60,10 +64,6 @@ CORE=$(cat <<EOF
   (run-jetty handlers {:port 8080}))
 EOF
 )
-
-if [ ! -z $1 ]; then
-  NAME="$1"
-fi
 
 echo "Creating new project $NAME"
 
