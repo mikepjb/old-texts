@@ -1,0 +1,85 @@
+#!/bin/bash
+
+set -e
+
+NAME="example"
+
+DEPSEDN=$(cat <<EOF
+{:deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        ring/ring-core {:mvn/version "1.8.2"}
+        ring/ring-jetty-adapter {:mvn/version "1.8.2"}
+        com.bhauman/figwheel-main {:mvn/version "0.2.12"}
+        reagent/reagent {:mvn/version "1.0.0"}}
+ ;; setup some development paths
+ :paths ["src/clj" "src/cljc" "src/cljs" "target" "resources"]
+ ;; setup a helpful alias to start the build
+ :aliases {:dev {:extra-deps {nrepl/nrepl {:mvn/version "0.8.2"}
+                              cider/piggieback {:mvn/version "0.5.2"}
+                              clj-kondo/clj-kondo {:mvn/version "2021.04.23"}}
+                 :extra-paths ["dev"]}
+           :test {:extra-deps {lambdaisland/kaocha {:mvn/version "1.0.829"}} 
+                  :extra-paths ["test/clj" "test/cljs"]}
+           :build-dev {:main-opts ["-m" "figwheel.main" "-b" "dev" "-r"]}
+           :build {:main-opts ["-m" "figwheel.main" "-bo" "release"]}}}
+EOF
+)
+
+MAKEFILE=$(cat <<EOF
+.PHONY: all test clean
+
+clean:
+	rm -rf target/*
+
+repl:
+	clojure -M:nrepl:dev:test --middleware "[cider.piggieback/wrap-cljs-repl]"
+
+lint:
+	clojure -M:dev -m clj-kondo.main --lint src/**
+
+test:
+	clojure -M:test -m kaocha.runner
+
+build:
+	mkdir -p ./target/public
+	cp -r ./resources/public/* ./target/public
+	clojure -M:build
+EOF
+)
+
+CORE=$(cat <<EOF
+(ns $NAME.core
+  (:require [ring.adapter.jetty :refer [run-jetty]]))
+
+(defn handler [request]
+  {:status 200
+   :headers {"Content-Type" "text/html"}
+   :body "Hello $NAME World"})
+
+(defn -main
+  [& args]
+  (run-jetty handlers {:port 8080}))
+EOF
+)
+
+if [ ! -z $1 ]; then
+  NAME="$1"
+fi
+
+echo "Creating new project $NAME"
+
+cd ~/src
+
+if [ ! -d ~/src/$NAME ]; then
+  mkdir $NAME
+
+  cd ~/src/$NAME
+
+  echo "$DEPSEDN" > deps.edn
+  echo "$MAKEFILE" > Makefile
+
+  underscore_name=${NAME//-/_}
+  mkdir -p ./src/clj/$underscore_name
+  echo "$CORE" > ./src/clj/$underscore_name/core.clj
+else
+  echo "~/src/$NAME already exists"
+fi
