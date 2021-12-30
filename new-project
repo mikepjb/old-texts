@@ -35,7 +35,7 @@ clean:
 	rm -rf target/*
 
 repl:
-	clojure -M:nrepl:dev:test --middleware "[cider.piggieback/wrap-cljs-repl]"
+	clojure -M:nrepl:dev:test
 
 lint:
 	clojure -M:dev -m clj-kondo.main --lint src/**
@@ -61,7 +61,7 @@ CORE=$(cat <<EOF
 
 (defn -main
   [& args]
-  (run-jetty handlers {:port 8080}))
+  (run-jetty handler {:port 8080}))
 EOF
 )
 

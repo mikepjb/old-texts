@@ -200,5 +200,16 @@
 
 (setq exec-path (append exec-path '("/opt/homebrew/bin/")))
 
-(if (eq system-type 'gnu/linux)
-    (set-frame-font "Inconsolata 14" nil))
+;; (if (eq system-type 'gnu/linux)
+;;     (set-frame-font "Inconsolata 14" nil))
+(setq map (make-sparse-keymap))
+(defun delay-exit()
+  "Delay exit to avoid keybindings getting trapped on WSL2."
+  (interactive)
+  (save-some-buffers)
+  (message "Pausing for 600ms.. (thanks WSL2)")
+  (sit-for 0.6)
+  (kill-emacs))
+(global-set-key (kbd "C-x C-c") 'delay-exit)
+
+;;; init.el ends here

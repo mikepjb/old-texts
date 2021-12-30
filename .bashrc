@@ -1,6 +1,19 @@
 shopt -s nocaseglob #case insensitive completion
 
-OS=$(uname -s)
+OS="Linux"
+
+detect_os() {
+  desc=$(uname -a)
+
+  if [[ $desc == *"microsoft-standard-WSL2"* ]]; then
+    OS="Windows"
+  elif [[ $desc = *"Darwin"* ]]; then
+    OS="Mac"
+  fi
+}
+
+detect_os
+
 [ -f /etc/bash_completion ] && . /etc/bash_completion
 [[ $- =~ i ]] && stty -ixoff -ixon # Disable CTRL-S and CTRL-Q
 
@@ -76,7 +89,7 @@ PROMPT_COMMAND='PS1="\W($(git_state)) $(jobs_marker) "'
 # source /usr/local/share/chruby/chruby.sh
 # chruby 2.7.1
 
-if [ "$OS" = "Darwin" ]; then
+if [ "$OS" = "Mac" ]; then
   if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
   fi

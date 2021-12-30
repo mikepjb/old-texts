@@ -16,12 +16,8 @@ Plug 'tpope/vim-fugitive'
 " Plug 'mikepjb/vim-pair' " for now let's try without autoclosing brackets
 Plug 'mikepjb/vim-fold', { 'for': ['css', 'markdown', 'javascript'] }
 Plug 'tpope/vim-fireplace', { 'for': ['clojure'] }
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim' 
-Plug 'peitalin/vim-jsx-typescript'
-" Plug 'herringtondarkholme/yats.vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'Quramy/tsuquyomi'
+Plug 'guns/vim-sexp', { 'for': ['clojure'] }
+Plug 'tpope/vim-sexp-mappings-for-regular-people', { 'for': ['clojure'] }
 Plug 'dense-analysis/ale'
 " Plug 'natebosch/vim-lsc' " used for clj-kondo and eslint?
 
@@ -156,3 +152,15 @@ endfunction
 function! SelectaFile(path, glob, command)
   call SelectaCommand("fd -t f . " . a:path, "", a:command)
 endfunction
+
+if stridx(system("uname -r"), "WSL2") != -1
+  autocmd TextYankPost * call system('win32yank.exe -i --crlf', @")
+
+  function! Paste(mode)
+    let @" = system('win32yank.exe -o --lf')
+    return a:mode
+  endfunction
+
+  map <expr> p Paste('p')
+  map <expr> P Paste('P')
+endif

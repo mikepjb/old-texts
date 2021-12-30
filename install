@@ -1,9 +1,32 @@
 #!/bin/bash -e
 
+# TODO
+# Notes:
+# - add in ./dev folder with user.clj to start (cljs) from inside a repl
+# - add in figwheel fns to user.clj
+# - include .gitignore
+# - probably git init
+# - ensure there is a resources/public/css
+
 echo "Copying text files to useful locations from $PWD.."
 
 cd $(dirname $BASH_SOURCE)
 BASE=$(pwd)
+OS="Linux"
+
+join_by() { local IFS="$1"; shift; echo "$*"; }
+
+detect_os() {
+  desc=$(uname -a)
+
+  if [[ $desc == *"microsoft-standard-WSL2"* ]]; then
+    OS="Windows"
+  elif [[ $desc = *"Darwin"* ]]; then
+    OS="Mac"
+  fi
+}
+
+detect_os
 
 install_config_files() {
   echo '. ~/.bashrc' > ~/.bash_profile
@@ -150,29 +173,80 @@ install_with_brew_if_missing() {
 macos_setup() {
   if [ `uname -s` = "Darwin" ]; then
     echo 'this is macos'
+
+    if [ -f "/usr/bin/xcrun" ]; then
+	    echo 'xcrun found'
+    else
+	    echo 'xcrun missing, we should install xcode-tools'
+	    xcode-select --install
+    fi
+    # disable mouse acceleration
+    # defaults write -g com.apple.mouse.scaling -1
+
+    # install_with_brew_if_missing bash_completion bash-completion
+    install_with_brew_if_missing ffmpeg ffmpeg
+    install_with_brew_if_missing rg rg
+    install_with_brew_if_missing fd fd
+    install_with_brew_if_missing wget wget
+    install_with_brew_if_missing clojure clojure
   fi
-
-  if [ -f "/usr/bin/xcrun" ]; then
-    echo 'xcrun found'
-  else
-    echo 'xcrun missing, we should install xcode-tools'
-    xcode-select --install
-  fi
-
-  # disable mouse acceleration
-  # defaults write -g com.apple.mouse.scaling -1
-
-  install_with_brew_if_missing ffmpeg ffmpeg
-  install_with_brew_if_missing rg rg
-  install_with_brew_if_missing fd fd
-  install_with_brew_if_missing wget wget
-  install_with_brew_if_missing clojure clojure
-  # install_with_brew_if_missing bash_completion bash-completion
 }
 
-macos_setup
+linuxpkgs=(
+  ffmpeg
+  wget
+  make
+  openjdk-17-jdk
+  openjdk-17-source
+  maven # for deploying new clojure libs
+  vim-gtk # for xterm_clipboard support, in lieu of actually compiling our own version
+)
+
+# no repos for this on ubuntu by default
+#  rg
+#  fd
+
+linux_setup() {
+  sudo apt-get update
+	sudo apt-get install $(join_by ' ' "${linuxpkgs[@]}")
+
+  # install clojure seperately
+  curl -O https://download.clojure.org/install/linux-install-1.10.3.998.sh
+  chmod +x linux-install-1.10.3.998.sh
+  sudo ./linux-install-1.10.3.998.sh
+}
+
+manual_steps() {
+  echo '!!! make sure you disable cache on google chrome'
+  echo '!!! make sure you disable ctrl + v as paste for windows terminal for WSL'
+  echo '!!! make sure you enable custom formatters under chrome devtools preferences'
+}
+
+install_win32yank() {
+  if [ ! -f ~/.local/bin/win32yank.exe ]; then
+    wget https://github.com/equalsraf/win32yank/releases/download/v0.0.4/win32yank-x64.zip -o ~/.local/bin/win32yank.zip
+    unzip win32yank.zip
+    rm  ~/.local/bin/win32yank.zip
+    rm  ~/.local/bin/README.md
+    rm  ~/.local/bin/LICENSE
+  else
+    echo 'win32yank is already installed'
+  fi
+}
+
+if [ "$OS" = "Mac" ]; then
+  echo 'mac detected'
+  macos_setup
+elif [ "$OS" = "Windows" ]; then
+  echo 'windows detected, but we must be in WSL since this is a bash script'
+  # linux_setup
+  install_win32yank
+else
+  echo 'true linux detected, no action taken'
+fi
 install_config_files
 configure_git
 set_colours
 check_external_commands
+manual_steps
 mkdir -p ~/.local/bin && cp ./ns ~/.local/bin
