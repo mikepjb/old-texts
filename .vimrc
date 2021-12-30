@@ -46,7 +46,7 @@ let g:ftplugin_sql_omni_key = '<Nop>' " ctrl+c is for escape, not completion.
 let mapleader= ' '
 nnoremap Y y$
 nnoremap Q @q
-nnoremap gb :Gblame<cr>
+nnoremap gb :Git blame<cr>
 nnoremap <C-q> :quit<cr>
 nnoremap <leader>h :LSClientShowHover<CR>
 if executable('selecta')
